@@ -39,14 +39,33 @@ def save_matches(files, top_k=5000, filtering=True, fname='similarities/matches.
         #x1 = torch.tensor(IMAGES[i1].transpose(2,0,1))
         #x2 = torch.tensor(IMAGES[i2].transpose(2,0,1))
         matches_list = xfeat.match_xfeat_star_from_cache(i1, i2)
+        # if not filtering
+        matches_list_np = np.array([matches_list[0],matches_list[1]])
+        name1 = files[i1].split('/')[-1].replace('.jpg','')
+        name2 = files[i2].split('/')[-1].replace('.jpg','')
+        # TODO: sauver avec le nom des images
+        np.save('similarities/poi_couples_____' + name1 + '_____' + name2 + '_____.npy',matches_list_np)
+        # poi = np.load('similarities/poi_couples.npy')
         if not filtering: return len(matches_list[0])
         
-        _, mask = cv2.findHomography(
+        res, mask = cv2.findHomography(
             matches_list[0],
             matches_list[1],
             method=cv2.USAC_MAGSAC,
             ransacReprojThreshold=8,
         )
+        mask_bool = (mask>0)[:,0]
+        # if filtering
+        matches_list_np = np.zeros([2,mask.sum(),2])
+        # IMG1
+        matches_list_np[0,:,0] = matches_list[0][mask_bool,0]
+        matches_list_np[0,:,1] = matches_list[0][mask_bool,1]
+        # IMG2
+        matches_list_np[1,:,0] = matches_list[1][mask_bool,0]
+        matches_list_np[1,:,1] = matches_list[1][mask_bool,1]
+        # TODO: sauver avec le nom des images
+        np.save('similarities/poi_couples_____' + name1 + '_____' + name2 + '_____.npy',matches_list_np)       
+        #poi = np.load('similarities/poi_couples.npy')
         return mask.sum()
 
     similarities = np.zeros((len(files), len(files)))
