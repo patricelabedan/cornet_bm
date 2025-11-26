@@ -6,8 +6,6 @@ import tqdm
 import pandas as pd
 import time
 import cv2
-from pathlib import Path
-
 
 def save_matches(files, top_k=5000, filtering=True, fname='similarities/matches.npy'):
     """
@@ -33,9 +31,9 @@ def save_matches(files, top_k=5000, filtering=True, fname='similarities/matches.
             im_list.append(torch.tensor(im.transpose(2,0,1)))
         else:
             im_list.append(torch.tensor(im[None,:,:]))
-
     xfeat = XFeat(top_k=top_k)
     xfeat.cache_feats(im_list)
+
     
     def matches_two_files(i1, i2):
         #x1 = torch.tensor(IMAGES[i1].transpose(2,0,1))
@@ -43,13 +41,9 @@ def save_matches(files, top_k=5000, filtering=True, fname='similarities/matches.
         matches_list = xfeat.match_xfeat_star_from_cache(i1, i2)
         # if not filtering
         matches_list_np = np.array([matches_list[0],matches_list[1]])
-        # name1 = files[i1].split('/')[-1].replace('.jpg','')
-        # name2 = files[i2].split('/')[-1].replace('.jpg','')
-        name1 = Path(files[i1]).name # .split('/')[-1].replace('.jpg','')
-        name2 = Path(files[i2]).name        
-        print("name1 = ", name1)
-        print("name2 = ", name2)
-        
+        name1 = files[i1].split('/')[-1].replace('.jpg','')
+        name2 = files[i2].split('/')[-1].replace('.jpg','')
+        # TODO: sauver avec le nom des images
         np.save('similarities/poi_couples_____' + name1 + '_____' + name2 + '_____.npy',matches_list_np)
         # poi = np.load('similarities/poi_couples.npy')
         if not filtering: return len(matches_list[0])
@@ -69,21 +63,15 @@ def save_matches(files, top_k=5000, filtering=True, fname='similarities/matches.
         # IMG2
         matches_list_np[1,:,0] = matches_list[1][mask_bool,0]
         matches_list_np[1,:,1] = matches_list[1][mask_bool,1]
-
+        # TODO: sauver avec le nom des images
         np.save('similarities/poi_couples_____' + name1 + '_____' + name2 + '_____.npy',matches_list_np)       
         #poi = np.load('similarities/poi_couples.npy')
         return mask.sum()
 
     similarities = np.zeros((len(files), len(files)))
-
     for i in tqdm.tqdm(range(len(files)), desc='Matching'):
         for j in range(len(files)):
             similarities[i][j] = matches_two_files(i, j)
     np.save(fname, similarities)
 
     print(f'Elapsed : {(time.time() - start_time):4f}s')
-
-
-
-
-
