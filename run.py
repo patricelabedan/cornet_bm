@@ -1,7 +1,7 @@
 from utils import get_config, get_images
 from extract_features import compute_roma_sim, compute_xfeat_sim
-from clustering import AGLP_clustering, proj_hdbscan, dissim_hdbscan
-import numpy as np
+# from clustering import AGLP_clustering, proj_hdbscan, dissim_hdbscan
+# import numpy as np
 
 if __name__ == '__main__':
 

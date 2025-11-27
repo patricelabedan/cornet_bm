@@ -1,6 +1,5 @@
 from utils import get_config, get_images
-from benchmark import xfeat_bm
-from benchmark import utils_bm    
+from benchmark import xfeat_bm, utils_bm    
 
 
 if __name__ == '__main__':
