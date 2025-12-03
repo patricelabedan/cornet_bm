@@ -1,7 +1,7 @@
 from utils import get_config, get_images
 from extract_features import compute_roma_sim, compute_xfeat_sim
-# from clustering import AGLP_clustering, proj_hdbscan, dissim_hdbscan
-# import numpy as np
+from clustering import AGLP_clustering, proj_hdbscan, dissim_hdbscan
+import numpy as np
 
 if __name__ == '__main__':
 
@@ -21,16 +21,16 @@ if __name__ == '__main__':
         raise ValueError('Wrong matching algorithm selected. Must be in : XFeat | RoMa')
     
     #### Clustering
-    #sim = np.load(FNAME)
-    #partition = []
-    #if cfg['Clustering'] == 'AGLP':
-    #    partition = AGLP_clustering(sim)
-    #elif cfg['Clustering'] == 'HDBSCAN-Proj':
-    #    partition = proj_hdbscan(sim)
-    #elif cfg['Clustering'] == 'HDBSCAN-Dissim':
-    #    partition = dissim_hdbscan(sim)
-    #else:
-    #    raise ValueError('Wrong Clustering selected. Must be in : AGLP | HDBSCAN-Dissim | HDBSCAN-Proj ')
+    sim = np.load(FNAME)
+    partition = []
+    if cfg['Clustering'] == 'AGLP':
+        partition = AGLP_clustering(sim)
+    elif cfg['Clustering'] == 'HDBSCAN-Proj':
+        partition = proj_hdbscan(sim)
+    elif cfg['Clustering'] == 'HDBSCAN-Dissim':
+        partition = dissim_hdbscan(sim)
+    else:
+        raise ValueError('Wrong Clustering selected. Must be in : AGLP | HDBSCAN-Dissim | HDBSCAN-Proj ')
 
-    #print(partition, partition.dtype, partition)
+    print(partition, partition.dtype, partition)
     #np.savetxt("die_studie.txt", partition, fmt="%i")
