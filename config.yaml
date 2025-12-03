@@ -1,11 +1,12 @@
-Dataset: Paphos # Paphos | Tanis1986 | Custom dataset
+Dataset: DS8
+Distance: CORNET
+Filtering: true
 Matching:
-  Algo:
-    XFeat # XFeat | RoMa
+  Algo: SIFT
   Params:
+    RoMa-Threshold: 0.9
     XFeat-TopK: 5000
-    RoMa-Threshold: 0.9 
-Filtering:
-  False
-Clustering:
-  AGLP # AGLP | HDBSCAN-Dissim | HDBSCAN-Proj | ConnectedComponents_Clustering
+PATH_PROJECT: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK
+SIMILARITIES: Datasets\SIMILARITIES
+Treasure: IJ_DS8
+algo_matching: SIFT

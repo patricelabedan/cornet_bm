@@ -9,6 +9,8 @@ import cv2
 from pathlib import Path
 import os
 import glob
+from benchmark.utils_bm import save_distance_matrix_to_csv, sort_csv_by_distance
+
 
 
 def clean_poi_couples_directory(out_dir='similarities/poi_couples'):
@@ -27,7 +29,7 @@ def clean_poi_couples_directory(out_dir='similarities/poi_couples'):
 def save_poi_couples(files, top_k=5000, out_dir='similarities/poi_couples'):
     """
     Pour chaque couple d'images, extrait les points d'intérêt XFeat et les sauvegarde dans un fichier .npy.
-    Le nom du fichier est : poi_couples____{nom_image_i}____{nom_image_j}.npy
+    Le nom du fichier est : poi_couples____{nom_image_i}____{nom_image_j}____.npy
     """
     os.makedirs(out_dir, exist_ok=True)
     IMAGES = [io.imread(im) for im in files]
@@ -46,15 +48,15 @@ def save_poi_couples(files, top_k=5000, out_dir='similarities/poi_couples'):
             # matches_list est typiquement une liste de deux arrays (points d'intérêt dans chaque image)
             name_i = os.path.basename(files[i])
             name_j = os.path.basename(files[j])
-            fname = f"{out_dir}/poi_couples____{name_i}____{name_j}.npy"
+            fname = f"{out_dir}/poi_couples____{name_i}____{name_j}____.npy"
             np.save(fname, matches_list)
 
 
 
 
-
-def create_distance_matrix(path_matrix_sim='similarities/matches.npy', 
-                           path_matrix_dist='similarities/distances.npy'):
+def create_distance_matrix(path_matrix_sim, 
+                           path_matrix_dist,
+                           final_dest):
     """
     Creates a distance matrix from a similarity matrix and saves it to a .npy file.
     """
@@ -65,12 +67,29 @@ def create_distance_matrix(path_matrix_sim='similarities/matches.npy',
     np.fill_diagonal(dmat, 0)
     np.save(path_matrix_dist, dmat)
 
+    parent_folder = Path(path_matrix_dist).parent
+
+    path_result_distances_not_sorted = str(Path(parent_folder, "results_distance_not_sorted.csv"))
+    path_result_distances = str(Path(parent_folder, "results_distance.csv"))
+
+    path_coin_list_txt = str(Path(final_dest, 'files_list.txt'))
+
+    save_distance_matrix_to_csv(path_matrix_dist, 
+                                path_coin_list_txt, 
+                                path_result_distances_not_sorted)
+
+    sort_csv_by_distance(path_result_distances_not_sorted, 
+                         path_result_distances)
+
+
+
+
 
 
 def build_similarity_matrix_from_poi_couples(files, 
-                                             filtering=True, 
-                                             dir_poi='similarities/poi_couples', 
-                                             fname='similarities/matches.npy'):
+                                             filtering, 
+                                             dir_poi, 
+                                             fname):
     """
     Construit la matrice de similarités à partir des fichiers poi_couples____...____.npy
     """
@@ -80,7 +99,7 @@ def build_similarity_matrix_from_poi_couples(files,
         for j in range(len(files)):
             name_i = os.path.basename(files[i])
             name_j = os.path.basename(files[j])
-            poi_file = f"{dir_poi}/poi_couples____{name_i}____{name_j}.npy"
+            poi_file = f"{dir_poi}/poi_couples____{name_i}____{name_j}____.npy"
             if not os.path.exists(poi_file):
                 similarities[i][j] = 0
                 continue

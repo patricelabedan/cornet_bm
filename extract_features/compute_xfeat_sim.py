@@ -50,7 +50,7 @@ def save_matches(files, top_k=5000, filtering=True, fname='similarities/matches.
         print("name1 = ", name1)
         print("name2 = ", name2)
         
-        np.save('similarities/poi_couples_____' + name1 + '_____' + name2 + '_____.npy',matches_list_np)
+        np.save('similarities/poi_couples____' + name1 + '____' + name2 + '____.npy',matches_list_np)
         # poi = np.load('similarities/poi_couples.npy')
         if not filtering: return len(matches_list[0])
         
@@ -70,7 +70,7 @@ def save_matches(files, top_k=5000, filtering=True, fname='similarities/matches.
         matches_list_np[1,:,0] = matches_list[1][mask_bool,0]
         matches_list_np[1,:,1] = matches_list[1][mask_bool,1]
 
-        np.save('similarities/poi_couples_____' + name1 + '_____' + name2 + '_____.npy',matches_list_np)       
+        np.save('similarities/poi_couples____' + name1 + '____' + name2 + '____.npy',matches_list_np)       
         #poi = np.load('similarities/poi_couples.npy')
         return mask.sum()
 
