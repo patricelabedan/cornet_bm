@@ -3,26 +3,8 @@ from skimage import io
 import torch
 from extract_features.xfeat_cache import XFeat
 import tqdm
-import pandas as pd
-import time
 import cv2
-from pathlib import Path
 import os
-import glob
-from benchmark.utils_bm import save_distance_matrix_to_csv, sort_csv_by_distance
-
-
-
-def clean_poi_couples_directory(out_dir='similarities/poi_couples'):
-    """
-    Supprime tous les fichiers dans le répertoire des poi_couples.
-    Utile pour libérer de l'espace disque après avoir construit la matrice de similarités.
-    """
-    files = glob.glob(f"{out_dir}/poi_couples____*.npy")
-    for f in files:
-        os.remove(f)
-    print(f"Tous les fichiers dans {out_dir} ont été supprimés.")
-
 
 
 
@@ -50,37 +32,6 @@ def save_poi_couples(files, top_k=5000, out_dir='similarities/poi_couples'):
             name_j = os.path.basename(files[j])
             fname = f"{out_dir}/poi_couples____{name_i}____{name_j}____.npy"
             np.save(fname, matches_list)
-
-
-
-
-def create_distance_matrix(path_matrix_sim, 
-                           path_matrix_dist,
-                           final_dest):
-    """
-    Creates a distance matrix from a similarity matrix and saves it to a .npy file.
-    """
-    if not os.path.exists(path_matrix_sim):
-        raise FileNotFoundError(f"Similarity matrix does not exist : '{path_matrix_sim}'")
-    sim = np.load(path_matrix_sim)
-    dmat = sim.max() - sim
-    np.fill_diagonal(dmat, 0)
-    np.save(path_matrix_dist, dmat)
-
-    parent_folder = Path(path_matrix_dist).parent
-
-    path_result_distances_not_sorted = str(Path(parent_folder, "results_distance_not_sorted.csv"))
-    path_result_distances = str(Path(parent_folder, "results_distance.csv"))
-
-    path_coin_list_txt = str(Path(final_dest, 'files_list.txt'))
-
-    save_distance_matrix_to_csv(path_matrix_dist, 
-                                path_coin_list_txt, 
-                                path_result_distances_not_sorted)
-
-    sort_csv_by_distance(path_result_distances_not_sorted, 
-                         path_result_distances)
-
 
 
 

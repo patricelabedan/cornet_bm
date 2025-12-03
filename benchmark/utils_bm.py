@@ -2,8 +2,9 @@
 import glob
 import numpy as np
 import csv
-import shutil
+# import shutil
 import os
+from pathlib import Path
 
 
 def get_images_in_treasure_dataset(treasure, dataset):
@@ -35,8 +36,6 @@ def save_distance_matrix_to_csv(distance_matrix_path,
                 writer.writerow([ref_pic_list[i], ref_pic_list[j], distances[i, j]])
 
 
-
-
 def sort_csv_by_distance(input_csv_path, 
                          output_csv_path):
     
@@ -52,4 +51,90 @@ def sort_csv_by_distance(input_csv_path,
 
 
 
+
+
+def getListImagesInFolder(path_folder):
+    """
+    Recherche récursive de tous les fichiers images dans path_folder et ses sous-dossiers.
+    Retourne une liste de chemins relatifs (par rapport à path_folder).
+    """
+    _dump = False
+    _function = "_getListImagesInFolder_"
+
+    path_Folder = Path(path_folder)
+    list_Images = []
+
+    # Recherche récursive avec rglob
+    for ext in ('*.jpg', '*.jpeg', '*.png', '*.bmp', '*.gif', '*.tiff'):
+        list_Images.extend(path_Folder.rglob(ext))
+
+    # Conversion en chemins relatifs
+    list_Images_rel = [img.relative_to(path_Folder) for img in list_Images]
+
+    if _dump:
+        print(f"[{_function}] list_Images_rel = {list_Images_rel}")
+
+    return list_Images_rel
+
+
+
+
+def saveCoinList(folder, filename, ref_pic_list):
+    _function = "_saveCoinList_"
+    _dump = True
+    if _dump:
+        print(f"[{_function}] START...")
+        print(f"[{_function}] folder = {folder}")
+        print(f"[{_function}] filename = {filename}")
+    with open(str(Path(folder, filename)), 'w', encoding='utf-8') as f:
+        for file in ref_pic_list:
+            f.write(f"{file}\n")
+        print(f"Files list saved in {str(Path(folder, filename))}")
+    if _dump:
+        print(f"[{_function}] ... STOP")
+
+
+
+
+def create_distance_matrix(path_matrix_sim, 
+                           path_matrix_dist,
+                           final_dest,
+                           files_list='files_list.txt'):
+    """
+    Creates a distance matrix from a similarity matrix and saves it to a .npy file.
+    """
+    if not os.path.exists(path_matrix_sim):
+        raise FileNotFoundError(f"Similarity matrix does not exist : '{path_matrix_sim}'")
+    sim = np.load(path_matrix_sim)
+    dmat = sim.max() - sim
+    np.fill_diagonal(dmat, 0)
+    np.save(path_matrix_dist, dmat)
+
+    parent_folder = Path(path_matrix_dist).parent
+
+    path_result_distances_not_sorted = str(Path(parent_folder, "results_distance_not_sorted.csv"))
+    path_result_distances = str(Path(parent_folder, "results_distance.csv"))
+
+    path_coin_list_txt = str(Path(final_dest, files_list))
+
+    save_distance_matrix_to_csv(path_matrix_dist, 
+                                path_coin_list_txt, 
+                                path_result_distances_not_sorted)
+
+    sort_csv_by_distance(path_result_distances_not_sorted, 
+                         path_result_distances)
+
+
+
+
+
+def clean_poi_couples_directory(out_dir='similarities/poi_couples'):
+    """
+    Supprime tous les fichiers dans le répertoire des poi_couples.
+    Utile pour libérer de l'espace disque après avoir construit la matrice de similarités.
+    """
+    files = glob.glob(f"{out_dir}/poi_couples____*.npy")
+    for f in files:
+        os.remove(f)
+    print(f"Tous les fichiers dans {out_dir} ont été supprimés.")
 
