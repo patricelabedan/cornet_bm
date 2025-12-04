@@ -79,17 +79,17 @@ def getListImagesInFolder(path_folder):
 
 
 
-def saveCoinList(folder, filename, ref_pic_list):
+def saveCoinList(path_file, ref_pic_list):
+    
     _function = "_saveCoinList_"
-    _dump = True
+    _dump = False
     if _dump:
         print(f"[{_function}] START...")
-        print(f"[{_function}] folder = {folder}")
-        print(f"[{_function}] filename = {filename}")
-    with open(str(Path(folder, filename)), 'w', encoding='utf-8') as f:
+        print(f"[{_function}] filename = {path_file}")
+    with open(str(Path(path_file)), 'w', encoding='utf-8') as f:
         for file in ref_pic_list:
             f.write(f"{file}\n")
-        print(f"Files list saved in {str(Path(folder, filename))}")
+        print(f"Files list saved in {str(Path(path_file))}")
     if _dump:
         print(f"[{_function}] ... STOP")
 
