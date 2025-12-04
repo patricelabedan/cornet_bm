@@ -15,21 +15,21 @@ if __name__ == '__main__':
     SIMILARITIES = cfg['SIMILARITIES']
     filtering = cfg['Filtering']
 
-    # Init paths or vars
-    # PATH_SIMILARITIES_DS = str(Path(PATH_PROJET, SIMILARITIES, treasure_name, ds))    
+    #### Init paths or vars
     images = utils_bm.get_images_in_treasure_dataset(treasure_name, ds)
     OUTDIR = f"similarities/{treasure_name}/{ds}"
     FNAME = f"{OUTDIR}/matches.npy"
     DIST = f"{OUTDIR}/distances.npy"
     PATH_POI_COUPLES = f"{OUTDIR}/poi_couples" 
-    FILES_LIST = "files_list.txt"
+    FILES_LIST = f"{OUTDIR}/files_list.txt"
 
-    if cfg['Distance'] == "Xfeat":  # xfeat ou Roma même chose? et CADS, ...?
+    #### poi-couples -> similarity 
+    if cfg['Distance'] == "Xfeat":  # CADS, ...?
         xfeat_bm.build_similarity_matrix_from_poi_couples(images, filtering=filtering, dir_poi=PATH_POI_COUPLES, fname=FNAME)              
-        # xfeat_bm.create_distance_matrix(FNAME, DIST, PATH_SIMILARITIES_DS)        
     elif cfg['Distance'] == "RoMa":
         roma_bm.build_similarity_matrix_from_poi_couples(images, filtering=filtering, dir_poi=PATH_POI_COUPLES, fname=FNAME)
     else:
         raise ValueError('Wrong matching algorithm selected. Must be in : XFeat | RoMa')
     
-    utils_bm.create_distance_matrix(path_matrix_sim=FNAME, path_matrix_dist=DIST, final_dest=OUTDIR, files_list=FILES_LIST)
+    #### similarity -> distance 
+    utils_bm.create_distance_matrix(path_matrix_sim=FNAME, path_matrix_dist=DIST, path_coin_list_txt=FILES_LIST)

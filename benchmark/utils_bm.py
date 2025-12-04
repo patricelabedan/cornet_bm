@@ -96,10 +96,29 @@ def saveCoinList(folder, filename, ref_pic_list):
 
 
 
+
+def addTempFilesForGTComparison(path_matrix_dist, 
+                                path_coin_list_txt):
+    
+    outdir = Path(path_matrix_dist).parent
+
+    path_csv_not_sorted = str(Path(outdir, "results_distance_not_sorted.csv"))
+    path_csv_sorted = str(Path(outdir, "results_distance.csv"))
+
+    save_distance_matrix_to_csv(path_matrix_dist, 
+                                path_coin_list_txt, 
+                                path_csv_not_sorted)
+    
+    sort_csv_by_distance(path_csv_not_sorted, 
+                         path_csv_sorted)
+    
+
+
+
+
 def create_distance_matrix(path_matrix_sim, 
                            path_matrix_dist,
-                           final_dest,
-                           files_list='files_list.txt'):
+                           path_coin_list_txt):
     """
     Creates a distance matrix from a similarity matrix and saves it to a .npy file.
     """
@@ -110,19 +129,9 @@ def create_distance_matrix(path_matrix_sim,
     np.fill_diagonal(dmat, 0)
     np.save(path_matrix_dist, dmat)
 
-    parent_folder = Path(path_matrix_dist).parent
+    ### Save distances to CSV for groundtruth comparison
+    addTempFilesForGTComparison(path_matrix_dist, path_coin_list_txt)
 
-    path_result_distances_not_sorted = str(Path(parent_folder, "results_distance_not_sorted.csv"))
-    path_result_distances = str(Path(parent_folder, "results_distance.csv"))
-
-    path_coin_list_txt = str(Path(final_dest, files_list))
-
-    save_distance_matrix_to_csv(path_matrix_dist, 
-                                path_coin_list_txt, 
-                                path_result_distances_not_sorted)
-
-    sort_csv_by_distance(path_result_distances_not_sorted, 
-                         path_result_distances)
 
 
 
