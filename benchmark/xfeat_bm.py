@@ -5,6 +5,9 @@ from extract_features.xfeat_cache import XFeat
 import tqdm
 import cv2
 import os
+# from utils_bm import saveCoinList
+from pathlib import Path
+from benchmark import utils_bm
 
 
 
@@ -79,3 +82,7 @@ def build_similarity_matrix_from_poi_couples(files,
         for file in files:
             f.write(f"{file}\n")
         print(f"Files list saved in {fname.replace('.npy', '_files.txt')}")
+
+    filename = str(Path(str(Path(dir_poi).parent), 'files_list.txt'))
+    print(f"Saving coin list in {filename}")
+    utils_bm.saveCoinList(filename, files)

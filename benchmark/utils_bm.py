@@ -82,7 +82,7 @@ def getListImagesInFolder(path_folder):
 def saveCoinList(path_file, ref_pic_list):
     
     _function = "_saveCoinList_"
-    _dump = False
+    _dump = True
     if _dump:
         print(f"[{_function}] START...")
         print(f"[{_function}] filename = {path_file}")

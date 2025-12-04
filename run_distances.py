@@ -24,7 +24,7 @@ if __name__ == '__main__':
     FILES_LIST = f"{OUTDIR}/files_list.txt"
 
     #### poi-couples -> similarity 
-    if cfg['Distance'] == "Xfeat":  # CADS, ...?
+    if cfg['Distance'] == "XFeat":  # CADS, ...?
         xfeat_bm.build_similarity_matrix_from_poi_couples(images, filtering=filtering, dir_poi=PATH_POI_COUPLES, fname=FNAME)              
     elif cfg['Distance'] == "RoMa":
         roma_bm.build_similarity_matrix_from_poi_couples(images, filtering=filtering, dir_poi=PATH_POI_COUPLES, fname=FNAME)
