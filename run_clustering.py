@@ -29,12 +29,13 @@ if __name__ == '__main__':
     partition = []
     if cfg['Clustering'] == 'AGLP':
         partition = AGLP_clustering_2(sim, dist)
-    elif cfg['Clustering'] == 'HDBSCAN-Proj':
-        partition = proj_hdbscan_2(sim, dist)
-    elif cfg['Clustering'] == 'HDBSCAN-Dissim':
-        partition = dissim_hdbscan_2(dist)
+    # elif cfg['Clustering'] == 'HDBSCAN-Proj':
+    #     partition = proj_hdbscan_2(sim, dist)
+    # elif cfg['Clustering'] == 'HDBSCAN-Dissim':
+    #     partition = dissim_hdbscan_2(dist)
     else:
-        raise ValueError('Wrong Clustering selected. Must be in : AGLP | HDBSCAN-Dissim | HDBSCAN-Proj ')
+        raise ValueError('Wrong Clustering selected. Must be in : AGLP ')
+        # raise ValueError('Wrong Clustering selected. Must be in : AGLP | HDBSCAN-Dissim | HDBSCAN-Proj ')
 
     print("[RUN CLUSTERING] Final partition:")
     print(f"partition : {partition}")
