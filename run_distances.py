@@ -16,7 +16,10 @@ if __name__ == '__main__':
     filtering = cfg['Filtering']
 
     #### Init paths or vars
-    images = utils_bm.get_images_in_treasure_dataset(treasure_name, ds)
+    # images = utils_bm.get_images_in_treasure_dataset(treasure_name, ds)
+    images = utils_bm.getListImagesInFolder(str(Path(PATH_PROJET, "Datasets", "BASE", treasure_name, ds)))
+    print("images = ", images)
+
     OUTDIR = f"similarities/{treasure_name}/{ds}"
     FNAME = f"{OUTDIR}/matches.npy"
     DIST = f"{OUTDIR}/distances.npy"

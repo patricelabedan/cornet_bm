@@ -47,6 +47,7 @@ def build_similarity_matrix_from_poi_couples(files,
     """
     Construit la matrice de similarités à partir des fichiers poi_couples____...____.npy
     """
+    print(files)
     import os
     similarities = np.zeros((len(files), len(files)))
     for i in tqdm.tqdm(range(len(files)), desc='Build Similarity Matrix'):
