@@ -13,7 +13,7 @@ from sknetwork.topology import get_connected_components
 
 
 
-def AGLP_clustering_2(sim, dmat):
+def AGLP_clustering_OLD(sim, dmat):
     """
     Compute Graph from matches between coins, Label Propagation clustering
     Best graph select upon threshold
@@ -28,9 +28,9 @@ def AGLP_clustering_2(sim, dmat):
 
 
 
-def AGLP_clustering_NICO(sim, dmat):
+def AGLP_clustering_2(sim, dmat):
 
-    print("clustering... AGLP_NICO...")
+    print("clustering... AGLP_2...")
 
     np.fill_diagonal(dmat, 0) #TODO remove and put '0'
     print(dmat.max())
@@ -49,48 +49,8 @@ def AGLP_clustering_NICO(sim, dmat):
     cmap_pred = partitions[np.argmax(np.array(sil))]
     print('cmap_pred', cmap_pred)
                 
-    print("clustering... AGLP_NICO... OK")
+    print("clustering... AGLP_2... OK")
     return cmap_pred
-
-
-
-# def AGLP_clustering_3(sim, dmat):
-#     """
-#     Compute Graph from matches between coins, Label Propagation clustering
-#     Best graph select upon threshold
-#     """
-#     print("sim1 : ", sim)
-#     np.fill_diagonal(sim, 0)
-#     print("sim : ", sim)
-#     max_th = int(sim.max())
-#     print(f"max_th = {max_th}")
-#     partitions = []
-#     for th in tqdm.tqdm(range(max_th), desc="Computing partitions for each threshold"):
-#         graph = sparse.csr_matrix(sim > th)
-#         partition = PropagationClustering().fit_predict(graph)
-#         print(f"th={th}, partition={partition}, unique={set(partition)}")
-#         partitions.append(partition)
-
-#     sil = []
-#     for idx, p in enumerate(tqdm.tqdm(partitions, desc='Computing Silhouettes')):
-#         n_clusters = len(set(p))
-#         if n_clusters > 1 and n_clusters < len(sim):
-#             score = silhouette_score(dmat, p, metric="precomputed")
-#             print(f"th={idx}, silhouette={score}, n_clusters={n_clusters}")
-#             sil.append(score)
-#         else:
-#             print(f"th={idx}, silhouette=0 (n_clusters={n_clusters})")
-#             sil.append(0)
-
-#     print("Silhouette scores:", sil)
-#     if sil:
-#         print(f'Optimal threshold : {np.argmax(sil)}')
-#         return partitions[np.argmax(np.array(sil))]
-#     else:
-#         print("No valid partitions found!")
-#         return None
-
-
 
 
 def ConnectedComponents_clustering_2(sim, dmat):

@@ -31,8 +31,7 @@ if __name__ == '__main__':
     partition = []
     if cfg['Clustering'] == 'AGLP':
         print('[RUN CLUSTERING] AGLP clustering ...')
-        # partition = AGLP_clustering_2(sim, dist)
-        partition = AGLP_clustering_NICO(sim, dist)
+        partition = AGLP_clustering_2(sim, dist)
         print('[RUN CLUSTERING] AGLP clustering ... Done.')
     # elif cfg['Clustering'] == 'HDBSCAN-Proj':
     #     partition = proj_hdbscan_2(sim, dist)
