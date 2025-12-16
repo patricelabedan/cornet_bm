@@ -1,7 +1,7 @@
 from utils import get_config, get_images
 from benchmark import xfeat_bm, utils_bm, roma_bm    
 from pathlib import Path
-from benchmark.clustering_2 import AGLP_clustering_2, AGLP_clustering_NICO, proj_hdbscan_2, dissim_hdbscan_2
+from benchmark.clustering_2 import AGLP_clustering_2#, proj_hdbscan_2, dissim_hdbscan_2
 import numpy as np
 
 
