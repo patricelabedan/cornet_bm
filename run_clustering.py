@@ -15,18 +15,29 @@ if __name__ == '__main__':
     treasure_name = cfg['Treasure'] # not used here, but keeping for consistency
     INDIR = cfg['Indir']
     OUTDIR = cfg['Outdir']
+    print(f"[RUN CLUSTERING] INDIR: {INDIR}")
+    print(f"[RUN CLUSTERING] OUTDIR: {OUTDIR}")
 
     #### Init paths or vars
     SIM_MATRIX = f"{INDIR}/matches.npy"
+    print(f"[RUN CLUSTERING] SIM_MATRIX: {SIM_MATRIX}")
+    
     DIST_MATRIX = f"{INDIR}/distances.npy"
+    print(f"[RUN CLUSTERING] DIST_MATRIX: {DIST_MATRIX}")
+
     CMAP_PRED = f"{OUTDIR}/cmap_pred.txt"
+    print(f"[RUN CLUSTERING] CMAP_PRED: {CMAP_PRED}")
+
     DIE_STUDIE = f"{OUTDIR}/die_studie.txt"
+    print(f"[RUN CLUSTERING] DIE_STUDIE: {DIE_STUDIE}")
+
+    
 
     #### Clustering
     sim = np.load(SIM_MATRIX)
     dist = np.load(DIST_MATRIX)
-    # print("sim  =", sim ) 
-    # print("dist =", dist )
+    print(f"[RUN CLUSTERING] sim  = {sim}")
+    print(f"[RUN CLUSTERING] dist = {dist}")
     
     partition = []
     if cfg['Clustering'] == 'AGLP':

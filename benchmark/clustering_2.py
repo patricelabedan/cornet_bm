@@ -30,26 +30,33 @@ def AGLP_clustering_OLD(sim, dmat):
 
 def AGLP_clustering_2(sim, dmat):
 
-    print("clustering... AGLP_2...")
+    print("[AGLP_clustering_2] clustering... AGLP_2...")
 
     np.fill_diagonal(dmat, 0) #TODO remove and put '0'
-    print(dmat.max())
+    print("[AGLP_clustering_2] dmat.max()", dmat.max())
+    print("[AGLP_clustering_2] dmat.min()", dmat.min())
     sim = dmat.max() - dmat
+    # print("[AGLP_clustering_2] sim.max()", sim.max())
+    # print("[AGLP_clustering_2] sim.min()", sim.min())
+
     np.fill_diagonal(sim, 0)
     vals = np.unique(sim)
+    print("[AGLP_clustering_2] len(vals = np.unique(sim)):", len(vals))
     # partitions = [PropagationClustering().fit_predict(sparse.csr_matrix(sim > th)) for th in tqdm.tqdm(vals[:-1], desc="Computing partitions for each threshold")]
     partitions = []
     for th in tqdm.tqdm(vals[:-1], desc="Computing partitions for each threshold"):
-        # print(f"Current threshold: {th}")
+        print(f"Current threshold: {th}")
         partition = PropagationClustering().fit_predict(sparse.csr_matrix(sim > th))
-        partitions.append(partition)                
+        partitions.append(partition)       
+    print("[AGLP_clustering_2] avant sil.")         
     sil = [silhouette_score(dmat, p, metric="precomputed") if (len(set(p)) > 1 and len(set(p))<len(sim)) else 0 for p in tqdm.tqdm(partitions, desc='Computing Silhouettes')]
-    print('sil', sil)
-    print(f'Optimal threshold : {np.argmax(sil)}')
+    print("[AGLP_clustering_2] apres sil.")         
+    print('[AGLP_clustering_2] sil', sil)
+    print(f'[AGLP_clustering_2] Optimal threshold : {np.argmax(sil)}')
     cmap_pred = partitions[np.argmax(np.array(sil))]
-    print('cmap_pred', cmap_pred)
+    print('[AGLP_clustering_2] cmap_pred', cmap_pred)
                 
-    print("clustering... AGLP_2... OK")
+    print("[AGLP_clustering_2] clustering... AGLP_2... OK")
     return cmap_pred
 
 
