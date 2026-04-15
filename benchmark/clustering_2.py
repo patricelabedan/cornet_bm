@@ -45,7 +45,7 @@ def AGLP_clustering_2(sim, dmat):
     # partitions = [PropagationClustering().fit_predict(sparse.csr_matrix(sim > th)) for th in tqdm.tqdm(vals[:-1], desc="Computing partitions for each threshold")]
     partitions = []
     for th in tqdm.tqdm(vals[:-1], desc="Computing partitions for each threshold"):
-        print(f"Current threshold: {th}")
+        # print(f"Current threshold: {th}")
         partition = PropagationClustering().fit_predict(sparse.csr_matrix(sim > th))
         partitions.append(partition)       
     print("[AGLP_clustering_2] avant sil.")         
