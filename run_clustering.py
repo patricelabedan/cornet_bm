@@ -1,7 +1,7 @@
 from utils import get_config, get_images
 from benchmark import xfeat_bm, utils_bm, roma_bm    
 from pathlib import Path
-from benchmark.clustering_2 import AGLP_clustering_2#, proj_hdbscan_2, dissim_hdbscan_2
+from benchmark.clustering_2 import AGLP_clustering_2, ALGP_clustering_BM, ALGP_clustering_percentile_BM, ConnectedComponents_clustering_BM, proj_hdbscan_BM, dissim_hdbscan_BM#, proj_hdbscan_2, dissim_hdbscan_2
 import numpy as np
 
 
@@ -44,6 +44,16 @@ if __name__ == '__main__':
         print('[RUN CLUSTERING] AGLP clustering ...')
         partition = AGLP_clustering_2(sim, dist)
         print('[RUN CLUSTERING] AGLP clustering ... Done.')
+    elif cfg['Clustering'] == 'HDBSCAN-Proj':
+         partition = proj_hdbscan_BM(sim,dist)
+    elif cfg['Clustering'] == 'HDBSCAN-Dissim':
+         partition = dissim_hdbscan_BM(dist)
+    elif cfg['Clustering'] == 'AGLP BM':
+         partition = ALGP_clustering_BM(sim, dist)
+    elif cfg['Clustering'] == 'AGLP Percentile BM':
+         partition = ALGP_clustering_percentile_BM(sim, dist)
+    elif cfg['Clustering'] == 'Connected Components':
+         partition = ConnectedComponents_clustering_BM(sim, dist)
     # elif cfg['Clustering'] == 'HDBSCAN-Proj':
     #     partition = proj_hdbscan_2(sim, dist)
     # elif cfg['Clustering'] == 'HDBSCAN-Dissim':
