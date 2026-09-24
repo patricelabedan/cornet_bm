@@ -1,5 +1,11 @@
-Clustering: AGLP
-Dataset: DS2
-Indir: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\SIMILARITIES\LislejourdainV1_BMP\DS2
-Outdir: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\CLUSTERING\LislejourdainV1_BMP\DS2
-Treasure: LislejourdainV1_BMP
+Dataset: DS8
+Indir: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\SIMILARITIES\LislejourdainV1\DS8
+Outdir: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\CLUSTERING\LislejourdainV1\DS8
+Treasure: LislejourdainV1
+distance: ACCADIL
+matching_algo: BestSift
+path_abs_treasure: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\BASE\LislejourdainV1
+path_coin_list_txt: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\SIMILARITIES\LislejourdainV1\DS8\files_list.txt
+path_global_results_ds: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\GLOBAL_RESULTS\LislejourdainV1__0_accadil__1_bestsift__2_accadil\DS8
+path_project: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK
+preprocessing: accadil

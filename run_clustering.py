@@ -1,7 +1,8 @@
 from utils import get_config, get_images
 from benchmark import xfeat_bm, utils_bm, roma_bm    
 from pathlib import Path
-from benchmark.clustering_2 import AGLP_clustering_2, ALGP_clustering_BM, ALGP_clustering_percentile_BM, ConnectedComponents_clustering_BM, proj_hdbscan_BM, dissim_hdbscan_BM#, proj_hdbscan_2, dissim_hdbscan_2
+# from benchmark.clustering_2 import AGLP_clustering_2, ALGP_clustering_BM, ALGP_clustering_percentile_BM, ConnectedComponents_clustering_BM, proj_hdbscan_BM, dissim_hdbscan_BM#, proj_hdbscan_2, dissim_hdbscan_2
+from benchmark.clustering_cornet import ALGP_clustering_BM, ConnectedComponents_clustering_BM, proj_hdbscan_BM, dissim_hdbscan_BM
 import numpy as np
 
 
@@ -15,49 +16,67 @@ if __name__ == '__main__':
     treasure_name = cfg['Treasure'] # not used here, but keeping for consistency
     INDIR = cfg['Indir']
     OUTDIR = cfg['Outdir']
+    program = cfg['Clustering']
+
+
+    print(f"[RUN CLUSTERING] Program: {program}")
+
+
+    # TOTO PAT : ajouer un filtre sur cfg['Clustering']
+
     print(f"[RUN CLUSTERING] INDIR: {INDIR}")
     print(f"[RUN CLUSTERING] OUTDIR: {OUTDIR}")
 
     #### Init paths or vars
-    SIM_MATRIX = f"{INDIR}/matches.npy"
+    SIM_MATRIX = str(Path(INDIR, "matches.npy"))
     print(f"[RUN CLUSTERING] SIM_MATRIX: {SIM_MATRIX}")
     
-    DIST_MATRIX = f"{INDIR}/distances.npy"
+    DIST_MATRIX = str(Path(INDIR, "distances.npy"))
     print(f"[RUN CLUSTERING] DIST_MATRIX: {DIST_MATRIX}")
 
-    CMAP_PRED = f"{OUTDIR}/cmap_pred.txt"
+    CMAP_PRED = str(Path(OUTDIR, "cmap_pred.txt"))
     print(f"[RUN CLUSTERING] CMAP_PRED: {CMAP_PRED}")
 
-    DIE_STUDIE = f"{OUTDIR}/die_studie.txt"
+    DIE_STUDIE = str(Path(OUTDIR, "die_studie.txt"))
     print(f"[RUN CLUSTERING] DIE_STUDIE: {DIE_STUDIE}")
 
     
 
     #### Clustering
     sim = np.load(SIM_MATRIX)
-    dist = np.load(DIST_MATRIX)
+    dmat = np.load(DIST_MATRIX)
     print(f"[RUN CLUSTERING] sim  = {sim}")
-    print(f"[RUN CLUSTERING] dist = {dist}")
+    print(f"[RUN CLUSTERING] dist = {dmat}")
     
     partition = []
-    if cfg['Clustering'] == 'AGLP':
-        print('[RUN CLUSTERING] AGLP clustering ...')
-        partition = AGLP_clustering_2(sim, dist)
-        print('[RUN CLUSTERING] AGLP clustering ... Done.')
-    elif cfg['Clustering'] == 'HDBSCAN-Proj':
-         partition = proj_hdbscan_BM(sim,dist)
-    elif cfg['Clustering'] == 'HDBSCAN-Dissim':
-         partition = dissim_hdbscan_BM(dist)
-    elif cfg['Clustering'] == 'AGLP BM':
-         partition = ALGP_clustering_BM(sim, dist)
-    elif cfg['Clustering'] == 'AGLP Percentile BM':
-         partition = ALGP_clustering_percentile_BM(sim, dist)
-    elif cfg['Clustering'] == 'Connected Components':
-         partition = ConnectedComponents_clustering_BM(sim, dist)
-    # elif cfg['Clustering'] == 'HDBSCAN-Proj':
-    #     partition = proj_hdbscan_2(sim, dist)
-    # elif cfg['Clustering'] == 'HDBSCAN-Dissim':
-    #     partition = dissim_hdbscan_2(dist)
+     #     if cfg['Clustering'] == 'AGLP':
+     #         print('[RUN CLUSTERING] AGLP clustering ...')
+     #         partition = AGLP_clustering_2(sim, dist)
+     #         print('[RUN CLUSTERING] AGLP clustering ... Done.')
+     #     elif cfg['Clustering'] == 'HDBSCAN-Proj':
+     #          partition = proj_hdbscan_BM(sim,dist)
+     #     elif cfg['Clustering'] == 'HDBSCAN-Dissim':
+     #          partition = dissim_hdbscan_BM(dist)
+     #     elif cfg['Clustering'] == 'AGLP BM':
+     #          partition = ALGP_clustering_BM(sim, dist)
+     #     elif cfg['Clustering'] == 'AGLP Percentile BM':
+     #          partition = ALGP_clustering_percentile_BM(sim, dist)
+     #     elif cfg['Clustering'] == 'Connected Components':
+     #          partition = ConnectedComponents_clustering_BM(sim, dist)
+     #     # elif cfg['Clustering'] == 'HDBSCAN-Proj':
+     #     #     partition = proj_hdbscan_2(sim, dist)
+     #     # elif cfg['Clustering'] == 'HDBSCAN-Dissim':
+     #     #     partition = dissim_hdbscan_2(dist)
+
+    if program =='AGLP': 
+          partition= ALGP_clustering_BM(sim, dmat) ### CORNET
+    elif program =='ConnectedComponents_Clustering':
+          partition = ConnectedComponents_clustering_BM(sim, dmat) ### CORNET
+    elif program == 'HDBSCAN-Proj':
+          partition = proj_hdbscan_BM(sim, dmat) ### CORNET
+    elif program =='HDBSCAN-Dissim':
+          partition = dissim_hdbscan_BM(dmat) ### CORNET
+
     else:
         raise ValueError('Wrong Clustering selected. Must be in : AGLP ')
         # raise ValueError('Wrong Clustering selected. Must be in : AGLP | HDBSCAN-Dissim | HDBSCAN-Proj ')
