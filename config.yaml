@@ -1,11 +1,11 @@
 Dataset: DS8
-Indir: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\SIMILARITIES\LislejourdainV1\DS8
-Outdir: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\CLUSTERING\LislejourdainV1\DS8
-Treasure: LislejourdainV1
+Indir: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\SIMILARITIES\IJV1_BMP_DS2_DS8\DS8
+Outdir: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\CLUSTERING\IJV1_BMP_DS2_DS8\DS8
+Treasure: IJV1_BMP_DS2_DS8
 distance: ACCADIL
 matching_algo: BestSift
-path_abs_treasure: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\BASE\LislejourdainV1
-path_coin_list_txt: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\SIMILARITIES\LislejourdainV1\DS8\files_list.txt
-path_global_results_ds: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\GLOBAL_RESULTS\LislejourdainV1__0_accadil__1_bestsift__2_accadil\DS8
+path_abs_treasure: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\BASE\IJV1_BMP_DS2_DS8
+path_coin_list_txt: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\SIMILARITIES\IJV1_BMP_DS2_DS8\DS8\files_list.txt
+path_global_results_ds: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\GLOBAL_RESULTS\IJV1_BMP_DS2_DS8__0_accadil__1_bestsift__2_accadil\DS8
 path_project: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK
 preprocessing: accadil

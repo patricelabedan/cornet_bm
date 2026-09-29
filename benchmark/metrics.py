@@ -123,11 +123,12 @@ def computing_metrics(nbCoins, G, cmap_pred_path):
     Compute performance metrics for the given dataset and treasure.
     '''
     _function = "_computing_metrics_"
-    _dump = True
+    _dump = False
 
-    print(f"[{_function}] Starting computation of metrics...")
-    print(f"[{_function}] nbCoins : {nbCoins}, G : {G}")
-    print(f"[{_function}] cmap_pred_path : {cmap_pred_path}")
+    if _dump:
+        print(f"[{_function}] Starting computation of metrics...")
+        print(f"[{_function}] nbCoins : {nbCoins}, G : {G}")
+        print(f"[{_function}] cmap_pred_path : {cmap_pred_path}")
 
     
     ## cmap_pred (reload)
@@ -165,7 +166,7 @@ def compute_performance_metrics(cmap_true, cmap_pred, y_true, y_pred):
     '''
 
     _function = "_compute_performance_metrics_"
-    _dump = True
+    _dump = False
 
     ARI = adjusted_rand_score(cmap_true, cmap_pred)
     if _dump:
@@ -198,12 +199,13 @@ def compute_true_cluster_map(nbCoins, G):
     where coins that are linked (i.e., have a True value in G) belong to the same cluster.
     '''
     _function = "_compute_true_cluster_map_"
-    _dump = True
-    _dump_while = True
+    _dump = False
+    _dump_while = False
 
-    print(f"[{_function}] Starting computation of true cluster map...")
-    print(f"[{_function}] nbCoins : {nbCoins}")
-    print(f"[{_function}] G : {G}")
+    if _dump:
+        print(f"[{_function}] Starting computation of true cluster map...")
+        print(f"[{_function}] nbCoins : {nbCoins}")
+        print(f"[{_function}] G : {G}")
 
     indices_temp = np.arange(nbCoins)
     if _dump:
