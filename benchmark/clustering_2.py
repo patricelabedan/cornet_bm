@@ -60,7 +60,7 @@ def AGLP_clustering_2(sim, dmat):
     return cmap_pred
 
 
-def ConnectedComponents_clustering_2(sim, dmat):
+def ConnectedComponents_2(sim, dmat):
     np.fill_diagonal(sim, 0)
     partitions = [get_connected_components(sparse.csc_matrix(sim > t)) for t in tqdm.tqdm(range(int(sim.max())), desc="Computing connected components")]
     sil = [silhouette_score(dmat, p, metric="precomputed") if (len(set(p)) > 1 and len(set(p))<len(sim)) else 0 for p in tqdm.tqdm(partitions, desc='Computing Silhouettes')]
@@ -159,7 +159,7 @@ def ALGP_clustering_percentile_BM(sim, dmat):
 
 
 
-def ConnectedComponents_clustering_BM(sim, dmat):
+def ConnectedComponents_BM(sim, dmat):
     np.fill_diagonal(dmat, 0)
     np.fill_diagonal(sim, 0)
     seuil=np.unique(sim)
@@ -267,7 +267,7 @@ if __name__ == '__main__':
     print ('AGLP Perceltile BM')
     ALGP_clustering_percentile_BM(sim, dmat)
     print ('Connected Components')
-    ConnectedComponents_clustering_BM(sim,dmat)
+    ConnectedComponents_BM(sim,dmat)
     print('HDBSCAN-Dissim')
     dissim_hdbscan_BM(dmat)
     print('HDBSCAN-Proj')

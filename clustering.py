@@ -25,7 +25,7 @@ def AGLP_clustering(sim):
     return partitions[np.argmax(np.array(sil))]
 
 
-def ConnectedComponents_clustering(sim):
+def ConnectedComponents(sim):
     dmat = sim.max() - sim
     np.fill_diagonal(dmat, 0)
     np.fill_diagonal(sim, 0)
@@ -41,7 +41,11 @@ def dissim_hdbscan(sim):
     dmat = sim.max() - sim
     np.fill_diagonal(dmat, 0)
 
-    predictor = HDBSCAN(min_cluster_size=2,min_samples=1, metric="precomputed",match_reference_implementation=True)
+    predictor = HDBSCAN(min_cluster_size=2,
+                        min_samples=1, 
+                        metric="precomputed",
+                        match_reference_implementation=True)
+    
     raw_hdbscan =  predictor.fit_predict(dmat)
     out_hdbscan = []
     
@@ -78,7 +82,10 @@ def proj_hdbscan(sim):
 
     def partition_from_umap_dim(dim):
         mat = UMAP(n_components=dim, metric='precomputed', n_neighbors=15).fit_transform(dmat)
-        predictor = HDBSCAN(min_cluster_size=2,min_samples=1 ,match_reference_implementation=True)
+        predictor = HDBSCAN(min_cluster_size=2,
+                            min_samples=1,
+                            match_reference_implementation=True)
+        
         raw_hdbscan =  predictor.fit_predict(mat)
         out_hdbscan = []
         

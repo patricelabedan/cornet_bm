@@ -16,25 +16,18 @@ from sknetwork.topology import get_connected_components
 
 
 def ALGP_clustering_BM(sim, dmat): 
-    print(f"[ALGP_clustering_BM] 1")
     np.fill_diagonal(dmat, 0)
-    print(f"[ALGP_clustering_BM] 2")
     np.fill_diagonal(sim, 0)
-    print(f"[ALGP_clustering_BM] 3")
     if np.all(sim == 0):
         return np.arange(len(sim))
-    print(f"[ALGP_clustering_BM] 4")
     seuil=np.unique(sim)
-    print(f"[ALGP_clustering_BM] 5")
     if len(seuil) > 1:  #sécurité matrice à 1
-        print(f"[ALGP_clustering_BM] 6")
         seuil = seuil[:-1]
-    print(f"[ALGP_clustering_BM] 7")
     partition = [PropagationClustering().fit_predict(sparse.csr_matrix(sim > th)) for th in seuil  ]
-    print(f"[ALGP_clustering_BM] 8")
     sil = [silhouette_score(dmat, p, metric="precomputed") if (len(set(p)) > 1 and len(set(p))<len(sim)) else 0 for p in partition]
-    print(f"[ALGP_clustering_BM] 9")
     return partition[np.argmax(np.array(sil))]
+
+
 
 def ALGP_clustering_percentile_BM(sim, dmat): 
     np.fill_diagonal(dmat, 0)
@@ -47,7 +40,7 @@ def ALGP_clustering_percentile_BM(sim, dmat):
 
 
 
-def ConnectedComponents_clustering_BM(sim, dmat):
+def ConnectedComponents_BM(sim, dmat):
     np.fill_diagonal(dmat, 0)
     np.fill_diagonal(sim, 0)
     if np.all(sim == 0):

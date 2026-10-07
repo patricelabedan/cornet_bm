@@ -122,15 +122,20 @@ def copier_fichiers(source_dir, dest_dir, liste_fichiers):
 
 def computeG(path_treasure, ds, path_ref_pic_list):
 
+    _function = "_computeG_"
+    _dump = False
+
     ref_pic_list = np.loadtxt(path_ref_pic_list, dtype=str)
-    print("Partition loaded from ref_pic_list :", ref_pic_list)
+    if _dump:
+        print(f"[{_function}] Partition loaded from ref_pic_list : {ref_pic_list}")
 
     links = loadGroundTruthDS(path_treasure, ds)
     nbCoins = len(ref_pic_list)
 
-    print("***** Display vars:")
-    print("nbCoins : ", nbCoins)
-    print("ref_pic_list : ", ref_pic_list)
+    if _dump:
+        print(f"[{_function}] ***** Display vars:")
+        print(f"[{_function}] nbCoins : {nbCoins}")
+        print(f"[{_function}] ref_pic_list : {ref_pic_list}")
 
     # Convert Path to str
     ref_pic_list = [str(p) for p in ref_pic_list]
@@ -156,32 +161,37 @@ def save_metrics(path_cluster_ds,
                  family_cluster,
                  algo_cluster):
 
-        b_ResultsFolder = False
+    _dump = False
+    _function = "_save_metrics_"
 
-        # Sauvegarder dans le dossier similarities du dataset
-        metrics_path = Path(path_cluster_ds, family_cluster, algo_cluster, 'metrics.json')
-        # print(f"Saving metrics to: {metrics_path}")
-        metrics_path.parent.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
-        with open(metrics_path, 'w') as f:
+    b_ResultsFolder = False
+
+    # Sauvegarder dans le dossier similarities du dataset
+    metrics_path = Path(path_cluster_ds, family_cluster, algo_cluster, 'metrics.json')
+    # print(f"Saving metrics to: {metrics_path}")
+    metrics_path.parent.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+    with open(metrics_path, 'w') as f:
+        json.dump(metrics, f, indent=4)
+
+    if _dump:
+        print(f"[{_function}] Metrics saved to: {metrics_path}")
+
+
+    if b_ResultsFolder:
+
+        # Copie avec timestamp dans le dossier RESULTS
+        timestamp = datetime.datetime.now().strftime("_%Y_%m_%d_%H_%M_%S")        
+        results_dir = Path(path_project, 'Datasets', 'RESULTS')
+        results_dir.mkdir(exist_ok=True)
+
+        ds = str(Path(path_cluster_ds).name)
+
+        file_name_metrics = f"metrics_{treasure}_{ds}_{family_cluster}_{algo_cluster}_{timestamp}.json"
+        metrics_timestamped_path = str(Path(results_dir, file_name_metrics))
+        with open(metrics_timestamped_path, 'w') as f:
             json.dump(metrics, f, indent=4)
 
-        print(f"Metrics saved to: {metrics_path}")        
-
-
-        if b_ResultsFolder:
-
-            # Copie avec timestamp dans le dossier RESULTS
-            timestamp = datetime.datetime.now().strftime("_%Y_%m_%d_%H_%M_%S")        
-            results_dir = Path(path_project, 'Datasets', 'RESULTS')
-            results_dir.mkdir(exist_ok=True)
-
-            ds = str(Path(path_cluster_ds).name)
-
-            file_name_metrics = f"metrics_{treasure}_{ds}_{family_cluster}_{algo_cluster}_{timestamp}.json"
-            metrics_timestamped_path = str(Path(results_dir, file_name_metrics))
-            with open(metrics_timestamped_path, 'w') as f:
-                json.dump(metrics, f, indent=4)
-
-            print(f"Timestamped metrics saved to: {metrics_timestamped_path}")    
+        if _dump:
+            print(f"[{_function}] Timestamped metrics saved to: {metrics_timestamped_path}")
 
 

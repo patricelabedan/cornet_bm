@@ -5,7 +5,7 @@ import os
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from utils import get_labels
-from clustering import AGLP_clustering, proj_hdbscan, dissim_hdbscan, evaluate_clustering, ConnectedComponents_clustering
+from clustering import AGLP_clustering, proj_hdbscan, dissim_hdbscan, evaluate_clustering, ConnectedComponents
 
 
 import warnings
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     #partition = AGLP_clustering(sim)
     #print(evaluate_clustering(partition, labels))
     #print('\n --- Connected Components ---')
-    #partition = ConnectedComponents_clustering(sim)
+    #partition = ConnectedComponents(sim)
     #print(evaluate_clustering(partition, labels))
 #
     #print('\n --- Dissimilarity HDBSCAN ---')

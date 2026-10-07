@@ -2,8 +2,8 @@ import os
 from utils import get_config, get_images
 from benchmark import xfeat_bm, utils_bm, roma_bm    
 from pathlib import Path
-# from benchmark.clustering_2 import AGLP_clustering_2, ALGP_clustering_BM, ALGP_clustering_percentile_BM, ConnectedComponents_clustering_BM, proj_hdbscan_BM, dissim_hdbscan_BM#, proj_hdbscan_2, dissim_hdbscan_2
-from benchmark.clustering_cornet import ALGP_clustering_BM, ConnectedComponents_clustering_BM, proj_hdbscan_BM, dissim_hdbscan_BM
+# from benchmark.clustering_2 import AGLP_clustering_2, ALGP_clustering_BM, ALGP_clustering_percentile_BM, ConnectedComponents_BM, proj_hdbscan_BM, dissim_hdbscan_BM#, proj_hdbscan_2, dissim_hdbscan_2
+from benchmark.clustering_cornet import ALGP_clustering_BM, ConnectedComponents_BM, proj_hdbscan_BM, dissim_hdbscan_BM
 import numpy as np
 import time
 from benchmark.metrics import computing_metrics
@@ -12,13 +12,22 @@ from benchmark.tools_cornetbm import copier_fichiers, save_metrics, computeG
 
 
 def removeFilesInDir(path_dir, files_to_remove):
-    print(f"Removing specified files in directory: {path_dir}...")
+
+    _dump = False
+    _function = "_removeFilesInDir_"
+    
+    if _dump:
+          print(f"[{_function}] Removing specified files in directory: {path_dir}...")
+
     for file in files_to_remove:
         file_path = os.path.join(path_dir, file)
         if os.path.exists(file_path):
-            print(f"Removing file: {file_path}")
+            if _dump:
+                  print(f"[{_function}] Removing file: {file_path}")
             os.remove(file_path)
-    print(f"Removing specified files in directory: {path_dir}... OK")
+
+    if _dump:
+          print(f"[{_function}] Removing specified files in directory: {path_dir}... OK")
 
 
 
@@ -72,6 +81,9 @@ def metrics_clustering(nbCoins,
 
 if __name__ == '__main__':
 
+      _dump = False
+      _function = "[cornet_bm] [run_clustering_all.py] "
+
       #### Get Config
       cfg = get_config()
 
@@ -97,31 +109,36 @@ if __name__ == '__main__':
       ref_pic_list = np.loadtxt(path_coin_list_txt, dtype=str)
       nbCoins = len(ref_pic_list)
 
-      print(f"ref_pic_list: {ref_pic_list}")
-      print(f"nbCoins: {nbCoins}")
+      # print(f"ref_pic_list: {ref_pic_list}")
+      if _dump:
+            print(f"{_function} nbCoins: {nbCoins}")
 
 
-      print(f"[RUN CLUSTERING] INDIR: {INDIR}")
-      print(f"[RUN CLUSTERING] OUTDIR: {OUTDIR}")
+      print(f"{_function} Start...")
+
+
+      # print(f"[RUN CLUSTERING] INDIR: {INDIR}")
+      # print(f"[RUN CLUSTERING] OUTDIR: {OUTDIR}")
 
       #### Init paths or vars
       SIM_MATRIX = str(Path(INDIR, "matches.npy"))
-      print(f"[RUN CLUSTERING] SIM_MATRIX: {SIM_MATRIX}")
+      print(f"{_function} SIM_MATRIX: {SIM_MATRIX}")
 
       DIST_MATRIX = str(Path(INDIR, "distances.npy"))
-      print(f"[RUN CLUSTERING] DIST_MATRIX: {DIST_MATRIX}")
+      print(f"{_function} DIST_MATRIX: {DIST_MATRIX}")
 
 
       sim = np.load(SIM_MATRIX)
       dmat = np.load(DIST_MATRIX)
-      print(f"[RUN CLUSTERING] sim  = {sim}")
-      print(f"[RUN CLUSTERING] dist = {dmat}")
 
+      if _dump:
+            print(f"{_function} sim  = {sim}")
+            print(f"{_function} dist = {dmat}")
       
 
       algo_list = [
             'AGLP', 
-            'ConnectedComponents_Clustering', 
+            'ConnectedComponents', 
             'HDBSCAN-Proj', 
             'HDBSCAN-Dissim'
       ]
@@ -129,16 +146,20 @@ if __name__ == '__main__':
 
       for algo in algo_list:
 
-            print(f"[RUN CLUSTERING] algo: {algo}")
+            print(f"{_function} ======================= algo: {algo} ...")
 
             OUTDIR_ALGO = str(Path(OUTDIR, 'cornet', algo))
             os.makedirs(OUTDIR_ALGO, exist_ok=True)
 
             CMAP_PRED = str(Path(OUTDIR_ALGO, "cmap_pred.txt"))
-            print(f"[RUN CLUSTERING] CMAP_PRED: {CMAP_PRED}")
+
+            if _dump:        
+                  print(f"{_function} CMAP_PRED: {CMAP_PRED}")
 
             DIE_STUDIE = str(Path(OUTDIR_ALGO, "die_studie.txt"))
-            print(f"[RUN CLUSTERING] DIE_STUDIE: {DIE_STUDIE}")
+
+            if _dump:
+                  print(f"{_function} DIE_STUDIE: {DIE_STUDIE}")
            
             files_to_remove = ["cmap_pred.txt", "die_studie.txt", "metrics.json"]
             removeFilesInDir(OUTDIR_ALGO, files_to_remove)
@@ -147,8 +168,8 @@ if __name__ == '__main__':
   
             if algo == 'AGLP': 
                   partition= ALGP_clustering_BM(sim, dmat) ### CORNET
-            elif algo == 'ConnectedComponents_Clustering':
-                  partition = ConnectedComponents_clustering_BM(sim, dmat) ### CORNET
+            elif algo == 'ConnectedComponents':
+                  partition = ConnectedComponents_BM(sim, dmat) ### CORNET
             elif algo == 'HDBSCAN-Proj':
                   partition = proj_hdbscan_BM(sim, dmat) ### CORNET
             elif algo == 'HDBSCAN-Dissim':
@@ -157,18 +178,23 @@ if __name__ == '__main__':
             else:
                   raise ValueError(f'Wrong Clustering selected. Must be in : {algo_list} ')
 
-            print(f"[RUN CLUSTERING] Final partition: {partition}")
+            if _dump:
+                  print(f"{_function} Final partition: {partition}")
 
             # create path if not exists
             Path(OUTDIR).mkdir(parents=True, exist_ok=True)
 
             # save "die_studie.txt"
             np.savetxt(DIE_STUDIE, partition, fmt="%i") 
-            print(f"[RUN CLUSTERING] Clustering results saved to {DIE_STUDIE}")
+            
+            if _dump:
+                  print(f"{_function} Clustering results saved to {DIE_STUDIE}")
 
             # save "cmap_pred.txt"
             np.savetxt(CMAP_PRED, partition, fmt="%i") 
-            print(f"[RUN CLUSTERING] Clustering results saved to {CMAP_PRED}")
+
+            if _dump:
+                  print(f"{_function} Clustering results saved to {CMAP_PRED}")
 
             # Attendre que le fichier 'cmap_pred.txt' soit bien écrit (sans limite de temps)
             start_time = time.time()
@@ -176,14 +202,14 @@ if __name__ == '__main__':
             while not os.path.exists(CMAP_PRED):
                   elapsed = int(time.time() - start_time)
                   if elapsed != last_print:
-                        print(f"[WAIT] Attente de création de cmap_pred.txt depuis {elapsed} seconde(s)...")
+                        print(f"{_function} Attente de création de cmap_pred.txt depuis {elapsed} seconde(s)...")
                         last_print = elapsed
                   time.sleep(0.1)        
 
-
             # print partition details
-            # print(partition, partition.dtype, partition)
-            print(f"[RUN CLUSTERING] Done.")
+            if _dump:
+                  print(f"{_function} Partition details: {partition}")
+                  print(f"{_function} partition.dtype: {partition.dtype}")
 
             metrics_clustering(nbCoins, 
                               G, 
@@ -197,9 +223,17 @@ if __name__ == '__main__':
 
             path_global_clustering_final = str(Path(path_global_results_ds, 'CLUSTERING', 'cornet', algo))
 
-            print(f"[RUN CLUSTERING] Files copied to {path_global_clustering_final}...")
+            if _dump:
+                  print(f"{_function} Files copied to {path_global_clustering_final}...")
+
             copier_fichiers(OUTDIR_ALGO, 
                             path_global_clustering_final, 
-                            ["cmap_pred.txt", "die_studie.txt", "metrics.json"])            
-            print(f"[RUN CLUSTERING] Files copied to {path_global_clustering_final}... OK")
+                            ["cmap_pred.txt", "die_studie.txt", "metrics.json"])         
+
+            if _dump:
+                  print(f"{_function} Files copied to {path_global_clustering_final}... OK")
+               
+            print(f"{_function} ======================= algo: {algo} ... OK")
+
+      print(f"{_function} END")
             
