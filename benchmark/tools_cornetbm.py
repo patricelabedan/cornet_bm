@@ -67,12 +67,20 @@ def defineGroundTruthMatrix(ref_pic_list, links):
     if _dump:
         print(f"{_function} nb coins : {nb}")
 
+    #liste des images sans extension
     ref_pic_stems = [Path(p).stem for p in ref_pic_list]
 
     G = np.full((nb,nb), False)
-    for l in links:
-        c1,c2 = ref_pic_stems.index(Path(l[0]).stem),ref_pic_stems.index(Path(l[1]).stem)
-        G[min(c1,c2),max(c1,c2)] = True
+    for link in links:
+        coin1 = str(Path(link[0]).stem)
+        coin2 = str(Path(link[1]).stem)
+        if coin1 in ref_pic_stems and coin2 in ref_pic_stems:
+            i1 = ref_pic_stems.index(coin1)
+            i2 = ref_pic_stems.index(coin2)
+            # c1,c2 = ref_pic_stems.index(Path(l[0]).stem),ref_pic_stems.index(Path(l[1]).stem)
+            G[min(i1,i2),max(i1,i2)] = True
+        # c1,c2 = ref_pic_stems.index(Path(l[0]).stem),ref_pic_stems.index(Path(l[1]).stem)
+        # G[min(c1,c2),max(c1,c2)] = True
     
     if _dump:
         print(f"{_function} G : {G}")
