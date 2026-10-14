@@ -1,11 +1,11 @@
-Dataset: DS9
-Indir: c:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\SIMILARITIES\IJV3-25ds\DS9
-Outdir: c:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\CLUSTERING\IJV3-25ds\DS9
+Clustering: ConnectedComponents
+Dataset: DS1
+Filtering: true
+Matching:
+  Algo: XFeat
+  Params:
+    RoMa-Threshold: 0.9
+    XFeat-TopK: 5000
+PATH_PROJECT: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK
+SIMILARITIES: C:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\SIMILARITIES
 Treasure: IJV3-25ds
-distance: XFeat
-matching_algo: XFeat
-path_abs_treasure: c:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\BASE\IJV3-25ds
-path_coin_list_txt: c:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\SIMILARITIES\IJV3-25ds\DS9\files_list.txt
-path_global_results_ds: c:\ACCADIL\SRC\DIE-LINK-BENCHMARK\Datasets\GLOBAL_RESULTS\IJV3-25ds__0_nothing__1_xfeat__2_xfeat\DS9
-path_project: c:\ACCADIL\SRC\DIE-LINK-BENCHMARK
-preprocessing: nothing

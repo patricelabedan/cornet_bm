@@ -47,7 +47,18 @@ def build_similarity_matrix_from_poi_couples(files,
     """
     Construit la matrice de similarités à partir des fichiers poi_couples____...____.npy
     """
-    print(files)
+    _dump = True
+    _function = "_build_similarity_matrix_from_poi_couples_"
+
+    if _dump:
+        print(f"[{_function}] START...")
+        print(f"[{_function}] dir_poi = {dir_poi}")
+        print(f"[{_function}] fname = {fname}")
+        print(f"[{_function}] filtering = {filtering}")
+        print(f"[{_function}] number of files = {len(files)}")
+        # print(f"[{_function}] files = {files}")
+
+    # print(files)
     import os
     similarities = np.zeros((len(files), len(files)))
     for i in tqdm.tqdm(range(len(files)), desc='Build Similarity Matrix'):
@@ -75,15 +86,27 @@ def build_similarity_matrix_from_poi_couples(files,
                     similarities[i][j] = mask.sum()
                 else:
                     similarities[i][j] = 0
+    if _dump:
+        print(f"[{_function}] Similarity matrix saved in {fname}...")
+    
     np.save(fname, similarities)
-    print(f"Similarity matrix saved in {fname}")
+
+    if _dump:
+        print(f"[{_function}] Similarity matrix saved in {fname}... OK")
 
     # Also save the list of files used to build the matrix
     with open(fname.replace('.npy', '_files.txt'), 'w', encoding='utf-8') as f:
         for file in files:
             f.write(f"{file}\n")
-        print(f"Files list saved in {fname.replace('.npy', '_files.txt')}")
+        if _dump:
+            print(f"[{_function}] Files list saved in {fname.replace('.npy', '_files.txt')}")
 
     filename = str(Path(str(Path(dir_poi).parent), 'files_list.txt'))
-    print(f"Saving coin list in {filename}")
+
+    if _dump:
+        print(f"[{_function}] Saving coin list in {filename} ...")
+
     utils_bm.saveCoinList(filename, files)
+
+    if _dump:
+        print(f"[{_function}] Saving coin list in {filename} ... OK")

@@ -5,6 +5,9 @@ from pathlib import Path
 
 if __name__ == '__main__':
 
+    _dump = True
+    _function = "[cornet_bm] [run_distances.py]"
+
     #### Get Config
     cfg = get_config()
 
@@ -16,15 +19,23 @@ if __name__ == '__main__':
     filtering = cfg['Filtering']
 
     #### Init paths or vars
-    # images = utils_bm.get_images_in_treasure_dataset(treasure_name, ds)
     images = utils_bm.getListImagesInFolder(str(Path(PATH_PROJET, "Datasets", "BASE", treasure_name, ds)))
-    print("images = ", images)
+    if _dump:
+        print(f"{_function} images = {images}")
 
-    OUTDIR = f"similarities/{treasure_name}/{ds}"
-    FNAME = f"{OUTDIR}/matches.npy"
-    DIST = f"{OUTDIR}/distances.npy"
-    PATH_POI_COUPLES = f"{OUTDIR}/poi_couples" 
-    FILES_LIST = f"{OUTDIR}/files_list.txt"
+    OUTDIR = str(Path("similarities", treasure_name, ds))
+    FNAME = str(Path(OUTDIR, "matches.npy"))
+    DIST = str(Path(OUTDIR, "distances.npy"))
+    PATH_POI_COUPLES = str(Path(OUTDIR, "poi_couples"))  
+    FILES_LIST = str(Path(OUTDIR, "files_list.txt"))
+
+    if _dump:
+        print(f"{_function} OUTDIR = {OUTDIR}")
+        print(f"{_function} FNAME = {FNAME}")
+        print(f"{_function} DIST = {DIST}")
+        print(f"{_function} PATH_POI_COUPLES = {PATH_POI_COUPLES}")
+        print(f"{_function} FILES_LIST = {FILES_LIST}")
+
 
     #### poi-couples -> similarity 
     if cfg['Distance'] == "XFeat":  # CADS, ...?
