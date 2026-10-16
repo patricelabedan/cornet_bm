@@ -5,6 +5,7 @@ import csv
 # import shutil
 import os
 import tempfile
+import unicodedata
 from pathlib import Path
 
 
@@ -63,14 +64,20 @@ def getListImagesInFolder(path_folder):
     _function = "_getListImagesInFolder_"
 
     path_Folder = Path(path_folder)
-    list_Images = []
+    valid_suffixes = {'.jpg', '.jpeg', '.png', '.bmp', '.gif', '.tiff'}
 
-    # Recherche récursive avec rglob
-    for ext in ('*.jpg', '*.jpeg', '*.png', '*.bmp', '*.gif', '*.tiff'):
-        list_Images.extend(path_Folder.rglob(ext))
+    list_Images_rel = [
+        img.relative_to(path_Folder)
+        for img in path_Folder.rglob('*')
+        if img.is_file() and img.suffix.lower() in valid_suffixes
+    ]
 
-    # Conversion en chemins relatifs
-    list_Images_rel = [img.relative_to(path_Folder) for img in list_Images]
+    list_Images_rel.sort(
+        key=lambda p: (
+            unicodedata.normalize('NFC', p.as_posix()).casefold(),
+            p.as_posix(),
+        )
+    )
 
     if _dump:
         print(f"[{_function}] list_Images_rel = {list_Images_rel}")

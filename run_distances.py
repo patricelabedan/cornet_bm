@@ -1,6 +1,7 @@
 from utils import get_config, get_images
 from benchmark import xfeat_bm, utils_bm, roma_bm    
 from pathlib import Path
+import os
 
 
 if __name__ == '__main__':
@@ -13,23 +14,38 @@ if __name__ == '__main__':
 
     #### Extract Similarities
     ds = cfg['Dataset']
+    PATH_ABS_PROJET = cfg['PATH_PROJECT']
     treasure_name = cfg['Treasure']
-    PATH_PROJET = cfg['PATH_PROJECT']
-    SIMILARITIES = cfg['SIMILARITIES']
+    algo_matching = cfg['Matching']['Algo']
     filtering = cfg['Filtering']
+    SIMILARITIES = cfg['SIMILARITIES']
+    cfg_distance = cfg['Distance']
+    path_images = cfg['path_images']
 
     #### Init paths or vars
-    images = utils_bm.getListImagesInFolder(str(Path(PATH_PROJET, "Datasets", "BASE", treasure_name, ds)))
+    # images = utils_bm.getListImagesInFolder(str(Path(PATH_ABS_PROJET, "Datasets", "BASE", treasure_name, ds)))
+    images = utils_bm.getListImagesInFolder(str(path_images))
     if _dump:
         print(f"{_function} images = {images}")
 
-    OUTDIR = str(Path("similarities", treasure_name, ds))
+    ### IN
+    if algo_matching.lower() in ['xfeat', 'roma']:
+        INDIR = str(Path("similarities", treasure_name, ds))
+    if algo_matching.lower() in ['bestsift']:
+        INDIR = str(Path(PATH_ABS_PROJET, "Datasets", "SIMILARITIES", treasure_name, ds))
+    PATH_POI_COUPLES = str(Path(INDIR, "poi_couples"))
+
+    ### OUT
+    OUTDIR = Path("similarities", treasure_name, ds)
+    os.makedirs(OUTDIR, exist_ok=True)
+    OUTDIR = str(OUTDIR)
+
     FNAME = str(Path(OUTDIR, "matches.npy"))
     DIST = str(Path(OUTDIR, "distances.npy"))
-    PATH_POI_COUPLES = str(Path(OUTDIR, "poi_couples"))  
     FILES_LIST = str(Path(OUTDIR, "files_list.txt"))
 
     if _dump:
+        print(f"{_function} INDIR = {INDIR}")
         print(f"{_function} OUTDIR = {OUTDIR}")
         print(f"{_function} FNAME = {FNAME}")
         print(f"{_function} DIST = {DIST}")

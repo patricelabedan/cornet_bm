@@ -10,11 +10,17 @@ from pathlib import Path
 from benchmark import utils_bm
 
 
+def _poi_couple_file_path(dir_poi, file_i, file_j):
+    name_i = os.path.basename(file_i)
+    name_j = os.path.basename(file_j)
+    return str(Path(dir_poi, f"poi_couples____{name_i}____{name_j}____.npy"))
+
 
 def save_poi_couples(files, top_k=5000, out_dir='similarities/poi_couples'):
     """
     Pour chaque couple d'images, extrait les points d'intérêt XFeat et les sauvegarde dans un fichier .npy.
-    Le nom du fichier est : poi_couples____{nom_image_i}____{nom_image_j}____.npy
+    Format: poi_couples____{name_i}____{name_j}____.npy (extensions included).
+    Image basenames must be unique within the dataset; hashes are not used.
     """
     os.makedirs(out_dir, exist_ok=True)
     IMAGES = [io.imread(im) for im in files]
@@ -31,9 +37,7 @@ def save_poi_couples(files, top_k=5000, out_dir='similarities/poi_couples'):
         for j in range(len(files)):
             matches_list = xfeat.match_xfeat_star_from_cache(i, j)
             # matches_list est typiquement une liste de deux arrays (points d'intérêt dans chaque image)
-            name_i = os.path.basename(files[i])
-            name_j = os.path.basename(files[j])
-            fname = f"{out_dir}/poi_couples____{name_i}____{name_j}____.npy"
+            fname = _poi_couple_file_path(out_dir, files[i], files[j])
             np.save(fname, matches_list)
 
 
@@ -47,7 +51,7 @@ def build_similarity_matrix_from_poi_couples(files,
     """
     Construit la matrice de similarités à partir des fichiers poi_couples____...____.npy
     """
-    _dump = True
+    _dump = False
     _function = "_build_similarity_matrix_from_poi_couples_"
 
     if _dump:
@@ -59,14 +63,14 @@ def build_similarity_matrix_from_poi_couples(files,
         # print(f"[{_function}] files = {files}")
 
     # print(files)
-    import os
     similarities = np.zeros((len(files), len(files)))
     for i in tqdm.tqdm(range(len(files)), desc='Build Similarity Matrix'):
         for j in range(len(files)):
-            name_i = os.path.basename(files[i])
-            name_j = os.path.basename(files[j])
-            poi_file = f"{dir_poi}/poi_couples____{name_i}____{name_j}____.npy"
+            if _dump:
+                print(f"[{_function}] Processing pair: {files[i]}, {files[j]}")
+            poi_file = _poi_couple_file_path(dir_poi, files[i], files[j])
             if not os.path.exists(poi_file):
+                print(f"[{_function}] POI file does not exist: {poi_file}")
                 similarities[i][j] = 0
                 continue
             matches_list = np.load(poi_file, allow_pickle=True)
@@ -87,12 +91,12 @@ def build_similarity_matrix_from_poi_couples(files,
                 else:
                     similarities[i][j] = 0
     if _dump:
-        print(f"[{_function}] Similarity matrix saved in {fname}...")
+        print(f"[{_function}] Similarity matrix saved in fname = {fname}...")
     
     np.save(fname, similarities)
 
     if _dump:
-        print(f"[{_function}] Similarity matrix saved in {fname}... OK")
+        print(f"[{_function}] Similarity matrix saved in fname = {fname}... OK")
 
     # Also save the list of files used to build the matrix
     with open(fname.replace('.npy', '_files.txt'), 'w', encoding='utf-8') as f:
