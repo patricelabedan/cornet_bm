@@ -151,7 +151,7 @@ def create_distance_matrix(path_matrix_sim,
     Creates a distance matrix from a similarity matrix and saves it to a .npy file.
     """
     _function = "_create_distance_matrix_"
-    _dump = False
+    _dump = True
 
     if _dump:
         print(f"[{_function}] START...")
