@@ -93,7 +93,10 @@ if __name__ == '__main__':
         else:
             xfeat_bm.build_similarity_matrix_from_poi_couples(images, filtering=filtering, dir_poi=PATH_POI_COUPLES, fname=FNAME)              
     elif cfg['Distance'] == "RoMa":
-        roma_bm.build_similarity_matrix_from_poi_couples(images, filtering=filtering, dir_poi=PATH_POI_COUPLES, fname=FNAME)
+        if algo_matching.lower() in ['bestsift']:
+            roma_bm.build_similarity_matrix_from_poi_couples_accadil(images, dir_poi=PATH_POI_COUPLES, fname=FNAME)
+        else:
+            roma_bm.build_similarity_matrix_from_poi_couples(images, dir_poi=PATH_POI_COUPLES, fname=FNAME)
     else:
         raise ValueError('Wrong matching algorithm selected. Must be in : XFeat | RoMa')
     

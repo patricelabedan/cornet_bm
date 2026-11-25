@@ -1,6 +1,6 @@
 from pathlib import Path
-from utils import get_config, get_images
-from benchmark import xfeat_bm, utils_bm, roma_bm  
+from utils import get_config
+from benchmark import xfeat_bm, roma_bm, utils_bm  
 import os
 
 
@@ -28,12 +28,9 @@ if __name__ == '__main__':
     
 
     if algo_matching.lower() == "xfeat":
-        utils_bm.clean_poi_couples_directory(out_dir=PATH_POI_COUPLES)
         xfeat_bm.save_poi_couples(images, top_k=int(cfg['Matching']['Params']['XFeat-TopK']), out_dir=PATH_POI_COUPLES)
     elif algo_matching.lower() == "roma":
-        utils_bm.clean_poi_couples_directory(out_dir=PATH_POI_COUPLES)
         roma_bm.save_poi_couples(images, threshold=float(cfg['Matching']['Params']['RoMa-Threshold']), out_dir=PATH_POI_COUPLES)
     else:
         raise ValueError('Wrong matching algorithm selected. Must be in : XFeat | RoMa')
     
-

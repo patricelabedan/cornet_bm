@@ -3,7 +3,7 @@
 import numpy as np
 # import matplotlib.pyplot as plt
 # import seaborn as sns
-from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, recall_score, precision_score, f1_score, accuracy_score
+from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, recall_score, precision_score, f1_score, accuracy_score, matthews_corrcoef, confusion_matrix
 # import json
 
 
@@ -116,6 +116,14 @@ def compute_y_true(nbCoins, G):
     return y_true
 
 
+def compute_fbeta_score(precision, recall, beta=2.0):
+    beta2 = beta * beta
+    den = beta2 * precision + recall
+    if den == 0.0:
+        return 0.0
+    return (1.0 + beta2) * precision * recall / den
+
+
 
 
 def computing_metrics(nbCoins, G, cmap_pred_path):
@@ -152,16 +160,16 @@ def computing_metrics(nbCoins, G, cmap_pred_path):
         print(f"[{_function}] y_pred : {y_pred}")
 
     ## Compute performance metrics
-    ARI, NMI, precision, recall, f1score, accuracy = \
+    ARI, NMI, precision, recall, f1score, F2, accuracy, MCC, TP, TN, FP, FN = \
         compute_performance_metrics(cmap_true, cmap_pred, y_true, y_pred)
 
-    return ARI, NMI, precision, recall, f1score, accuracy           
+    return ARI, NMI, precision, recall, f1score, F2, accuracy, MCC, TP, TN, FP, FN          
 
 
 
 def compute_performance_metrics(cmap_true, cmap_pred, y_true, y_pred):
     '''
-    Compute performance metrics (ARI, NMI, precision, recall, f1score, accuracy) 
+    Compute performance metrics (ARI, NMI, precision, recall, f1score, F2, accuracy, MCC, TP, TN, FP, FN) 
     for the given true and predicted cluster maps and links.
     '''
 
@@ -174,20 +182,29 @@ def compute_performance_metrics(cmap_true, cmap_pred, y_true, y_pred):
     NMI = normalized_mutual_info_score(cmap_true, cmap_pred)
     if _dump:
         print(f"{_function} Normalized Mutual Information : {NMI}")
-    precision = precision_score(y_true, y_pred)
+    precision = precision_score(y_true, y_pred, zero_division=0)
     if _dump:
         print(f"{_function} Precision = 1-FDR : {precision}")
-    recall = recall_score(y_true, y_pred)
+    recall = recall_score(y_true, y_pred, zero_division=0)
     if _dump:
         print(f"{_function} Recall = Sensitivity : {recall}")
-    f1score = f1_score(y_true, y_pred)
+    f1score = f1_score(y_true, y_pred, zero_division=0)
     if _dump:
         print(f"{_function} F1 score : {f1score}")
+    F2 = compute_fbeta_score(precision, recall, beta=2.0)
+    if _dump:
+        print(f"{_function} F2 score : {F2}")
     accuracy = accuracy_score(y_true, y_pred)
     if _dump:
-        print(f"{_function} Accuracy : {accuracy}")     
+        print(f"{_function} Accuracy : {accuracy}")
+    MCC = matthews_corrcoef(y_true, y_pred)
+    if _dump:
+        print(f"{_function} MCC : {MCC}")
+    TN, FP, FN, TP = confusion_matrix(y_true, y_pred, labels=[0, 1]).ravel()
+    if _dump:
+        print(f"{_function} TP={TP} TN={TN} FP={FP} FN={FN}")
 
-    return ARI, NMI, precision, recall, f1score, accuracy           
+    return ARI, NMI, precision, recall, f1score, F2, accuracy, MCC, int(TP), int(TN), int(FP), int(FN)          
 
 
 

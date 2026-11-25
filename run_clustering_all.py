@@ -41,7 +41,7 @@ def metrics_clustering(nbCoins,
                        path_global_results_ds,
                        cfg):
 
-    ARI, NMI, precision, recall, f1score, accuracy = computing_metrics(nbCoins, G, cmap_pred_path)
+    ARI, NMI, precision, recall, f1score, F2, accuracy, MCC, TP, TN, FP, FN = computing_metrics(nbCoins, G, cmap_pred_path)
 
 
     algo_clustering_name = 'cornet' + '_' + algo_cluster_cornet
@@ -60,7 +60,13 @@ def metrics_clustering(nbCoins,
             "precision": float(precision),
             "recall": float(recall),
             "f1score": float(f1score),
-            "accuracy": float(accuracy)
+            "F2": float(F2),
+            "MCC": float(MCC),
+            "accuracy": float(accuracy),
+            "TP": int(TP),
+            "TN": int(TN),
+            "FP": int(FP),
+            "FN": int(FN)
         }
     }
 
